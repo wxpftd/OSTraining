@@ -1,1 +1,9 @@
 D:\C#\PageReplacement\PageReplacement\bin\Debug\PageReplacement.exe.config
+D:\C#\OSTraining\PageReplacement\PageReplacement\bin\Debug\PageReplacement.exe.config
+D:\C#\OSTraining\PageReplacement\PageReplacement\obj\Debug\PageReplacement.csprojResolveAssemblyReference.cache
+D:\C#\OSTraining\PageReplacement\PageReplacement\obj\Debug\PageReplacement.Properties.Resources.resources
+D:\C#\OSTraining\PageReplacement\PageReplacement\obj\Debug\PageReplacement.csproj.GenerateResource.Cache
+D:\C#\OSTraining\PageReplacement\PageReplacement\bin\Debug\PageReplacement.exe
+D:\C#\OSTraining\PageReplacement\PageReplacement\bin\Debug\PageReplacement.pdb
+D:\C#\OSTraining\PageReplacement\PageReplacement\obj\Debug\PageReplacement.exe
+D:\C#\OSTraining\PageReplacement\PageReplacement\obj\Debug\PageReplacement.pdb

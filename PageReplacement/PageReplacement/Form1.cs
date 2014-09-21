@@ -25,6 +25,7 @@ namespace PageReplacement
         {
             Queue<int> optResult = new Queue<int>();
             Queue<int> fifoResult = new Queue<int>();
+            Queue<int> lruResult = new Queue<int>();
             Random re = new Random();
 
             ReplaceMethod opt = new ReplaceMethod(OPT);
@@ -40,7 +41,7 @@ namespace PageReplacement
             {
                 optResult.Enqueue(FrameAndMethodSeletion(i, opt));
                 fifoResult.Enqueue(FrameAndMethodSeletion(i, fifo));
-                //FrameAndMethodSeletion(i, lru);
+                lruResult.Enqueue(FrameAndMethodSeletion(i, lru)); 
             }
         }
 
@@ -127,10 +128,52 @@ namespace PageReplacement
         }
         #endregion
 
+        #region LRU算法
         private static int LRU(int frameCount)
         {
-            return 0;
+            int[] frame = new int[frameCount];
+            int frameLack = 0;
+            for (int pos = 0; pos < 400; pos ++ )
+            {
+                bool isContain = false;
+                int farthest = 400;
+                isContain = IsPageInFrame(ref frame, frameCount, pos);
+                if (!isContain)
+                {
+                    frameLack++;
+                    bool isPosEmpty = false;
+                    for (int i = 0; i < frameCount; i++)
+                    {
+                        if (frame[i] == -1)
+                        {
+                            frame[i] = addressStream[pos];
+                            isPosEmpty = true;
+                            break;
+                        }
+                    }
+                    if (!isPosEmpty)
+                    {
+                        int lastPos = 400;
+                        int changePos = 0; 
+                        for (int i = 0; i < frameCount; i++)
+                        {
+                            for (int j = pos - 1; j >= 0; j--)
+                            {
+                                if (frame[i] == addressStream[j] && lastPos > j)
+                                {
+                                    changePos = i;
+                                    lastPos = j;
+                                    break;
+                                }
+                            }
+                        }
+                        frame[changePos] = addressStream[pos];
+                    }
+                }
+            }
+            return frameCount;
         }
+        #endregion
 
         #region 帧内是否包含下一个页
         private static bool IsPageInFrame(ref int[] frame, int frameCount, int pos)

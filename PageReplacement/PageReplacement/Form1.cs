@@ -69,6 +69,7 @@ namespace PageReplacement
                     //淘汰永不使用或下次访问距当前时间最长的页面
                     for (int i = 0; i < frameCount; i++ )
                     {
+                        farOrNerver = -1;
                         for (int j = pos; j < 400; j++)
                         {
                             if (frame[i] == addressStream[j] && farOrNerver < j)
@@ -77,9 +78,8 @@ namespace PageReplacement
                                 break;
                             }
                         }
-                        if (frame[i] == -1)
+                        if (farOrNerver == -1)
                         {
-                            farOrNerver = -1;
                             frame[i] = addressStream[pos];
                             break;
                         }

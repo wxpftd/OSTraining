@@ -7,3 +7,4 @@ D:\C#\OSTraining\PageReplacement\PageReplacement\bin\Debug\PageReplacement.exe
 D:\C#\OSTraining\PageReplacement\PageReplacement\bin\Debug\PageReplacement.pdb
 D:\C#\OSTraining\PageReplacement\PageReplacement\obj\Debug\PageReplacement.exe
 D:\C#\OSTraining\PageReplacement\PageReplacement\obj\Debug\PageReplacement.pdb
+D:\C#\OSTraining\PageReplacement\PageReplacement\obj\Debug\PageReplacement.Form1.resources

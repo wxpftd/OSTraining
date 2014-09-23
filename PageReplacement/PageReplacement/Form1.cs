@@ -66,33 +66,48 @@ namespace PageReplacement
                 if (!isContain)
                 {
                     frameLack++;
-                    int farOrNerver = -1;
-                    //淘汰永不使用或下次访问距当前时间最长的页面
-                    for (int i = 0; i < frameCount; i++ )
+                    bool posEmpty = false;
+                    for (int i = 0; i < frameCount; i++)
                     {
-                        farOrNerver = -1;
-                        for (int j = pos; j < 400; j++)
-                        {
-                            if (frame[i] == addressStream[j] && farOrNerver < j)
-                            {
-                                farOrNerver = j;
-                                break;
-                            }
-                        }
-                        if (farOrNerver == -1)
+                        if (frame[i] == -1)
                         {
                             frame[i] = addressStream[pos];
+                            posEmpty = true;
                             break;
                         }
                     }
-                    if (farOrNerver != -1)
+                    if (!posEmpty)
                     {
+                        int farOrNerver = -1;
+                        //淘汰永不使用或下次访问距当前时间最长的页面
                         for (int i = 0; i < frameCount; i++)
                         {
-                            if (frame[i] == addressStream[farOrNerver])
+                            for (int j = pos; j < 400; j++)
+                            {
+                                if (frame[i] == addressStream[j])
+                                {
+                                    if (farOrNerver < j)
+                                    {
+                                        farOrNerver = j;
+                                    }
+                                    break;
+                                }
+                            }
+                            if (farOrNerver == -1)
                             {
                                 frame[i] = addressStream[pos];
                                 break;
+                            }
+                        }
+                        if (farOrNerver != -1)
+                        {
+                            for (int i = 0; i < frameCount; i++)
+                            {
+                                if (frame[i] == addressStream[farOrNerver])
+                                {
+                                    frame[i] = addressStream[pos];
+                                    break;
+                                }
                             }
                         }
                     }
@@ -132,11 +147,14 @@ namespace PageReplacement
         private static int LRU(int frameCount)
         {
             int[] frame = new int[frameCount];
+            for (int i = 0; i<frameCount; i++)
+            {
+                frame[i] = -1;
+            }
             int frameLack = 0;
             for (int pos = 0; pos < 400; pos ++ )
             {
                 bool isContain = false;
-                int farthest = 400;
                 isContain = IsPageInFrame(ref frame, frameCount, pos);
                 if (!isContain)
                 {
@@ -153,16 +171,19 @@ namespace PageReplacement
                     }
                     if (!isPosEmpty)
                     {
-                        int lastPos = 400;
+                        int disPos = 400;
                         int changePos = 0; 
                         for (int i = 0; i < frameCount; i++)
                         {
                             for (int j = pos - 1; j >= 0; j--)
                             {
-                                if (frame[i] == addressStream[j] && lastPos > j)
+                                if (frame[i] == addressStream[j])
                                 {
-                                    changePos = i;
-                                    lastPos = j;
+                                    if (disPos > j)
+                                    {
+                                        changePos = i;
+                                        disPos = j;
+                                    }
                                     break;
                                 }
                             }
@@ -171,7 +192,7 @@ namespace PageReplacement
                     }
                 }
             }
-            return frameCount;
+            return frameLack;
         }
         #endregion
 

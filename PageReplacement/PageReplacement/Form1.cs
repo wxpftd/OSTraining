@@ -12,20 +12,25 @@ namespace PageReplacement
 {
     public partial class Form1 : Form
     {
-        private static int[] addressStream = new int[500];
-
+        private static int[] addressStream;
+        Queue<double> optResult;
+        Queue<double> fifoResult;
+        Queue<double> lruResult;
         public delegate int ReplaceMethod(int frameCount);
         public Form1()
         {
             InitializeComponent();
+            addressStream = new int[500];
             MainFunction();
+            reflesh();
         }
 
+        #region 主函数
         private void MainFunction()
         {
-            Queue<int> optResult = new Queue<int>();
-            Queue<int> fifoResult = new Queue<int>();
-            Queue<int> lruResult = new Queue<int>();
+            optResult = new Queue<double>();
+            fifoResult = new Queue<double>();
+            lruResult = new Queue<double>();
             Random re = new Random();
 
             ReplaceMethod opt = new ReplaceMethod(OPT);
@@ -37,18 +42,22 @@ namespace PageReplacement
                 //addressStream[i] = i % 40;
                 addressStream[i] = re.Next(0, 399) % 40;            
             }
+            // 统计每个算法的缺页率
             for (int i = 4; i <= 40; i++)
             {
-                optResult.Enqueue(FrameAndMethodSeletion(i, opt));
-                fifoResult.Enqueue(FrameAndMethodSeletion(i, fifo));
-                lruResult.Enqueue(FrameAndMethodSeletion(i, lru)); 
+                optResult.Enqueue((FrameAndMethodSeletion(i, opt) - i) / 400.0);
+                fifoResult.Enqueue((FrameAndMethodSeletion(i, fifo) - i) / 400.0);
+                lruResult.Enqueue((FrameAndMethodSeletion(i, lru) - i) / 400.0); 
             }
         }
+        #endregion
 
+        #region 委托函数
         private int FrameAndMethodSeletion(int i, ReplaceMethod rm)
         {
             return rm(i); 
         }
+        #endregion
 
         #region OPT置换算法
         private static int OPT(int frameCount)
@@ -210,14 +219,26 @@ namespace PageReplacement
         }
         #endregion
 
-        private void label1_Click(object sender, EventArgs e)
+        #region 刷新页面,展示新的数据结果 
+        private void reflesh()
         {
+            // 删除旧数据
+            this.listView1.Items.Clear();
 
+            // 添加数据展示表格
+            for (int row = 4; row <= 40; row++)
+            {
+                System.Windows.Forms.ListViewItem newListViewItem = new ListViewItem(new string[] { "#" + row, Convert.ToString(optResult.Dequeue()), Convert.ToString(fifoResult.Dequeue()), Convert.ToString(lruResult.Dequeue()) }, -1);
+                this.listView1.Items.Add(newListViewItem);
+            }
         }
+        #endregion
 
         private void button1_Click(object sender, EventArgs e)
         {
-
+            MainFunction();
+            reflesh();
         }
+
     }
 }

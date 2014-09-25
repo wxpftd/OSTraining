@@ -10,14 +10,14 @@ using System.Windows.Forms;
 
 namespace PageReplacement
 {
-    public partial class Form1 : Form
+    public partial class PageReplacement : Form
     {
         private static int[] addressStream;
         Queue<double> optResult;
         Queue<double> fifoResult;
         Queue<double> lruResult;
         public delegate int ReplaceMethod(int frameCount);
-        public Form1()
+        public PageReplacement()
         {
             InitializeComponent();
             addressStream = new int[500];

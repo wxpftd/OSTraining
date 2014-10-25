@@ -34,6 +34,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Messaging" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -44,6 +45,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CreateFileDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateFileDialog.Designer.cs">
+      <DependentUpon>CreateFileDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="FileEntity.cs" />
     <Compile Include="FileSystem.cs">
       <SubType>Form</SubType>
@@ -53,6 +60,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="CreateFileDialog.resx">
+      <DependentUpon>CreateFileDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FileSystem.resx">
       <DependentUpon>FileSystem.cs</DependentUpon>
     </EmbeddedResource>
@@ -77,6 +87,19 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Material\addDirectory.ico" />
+    <Content Include="Material\addFile.ico" />
+    <Content Include="Material\closeFile.ico" />
+    <Content Include="Material\deleteDirectory.ico" />
+    <Content Include="Material\deleteFile.ico" />
+    <Content Include="Material\file.ico" />
+    <Content Include="Material\openDirectory.ico" />
+    <Content Include="Material\reName.ico" />
+    <Content Include="Material\saveFile.ico" />
+    <Content Include="Material\setting.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

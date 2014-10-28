@@ -245,7 +245,10 @@ namespace FileSystem
                         ViewFlush(currentPath + @"/" + listView2.SelectedItems[0].Text);
                     else
                     {
-                        OFile ofile = new OFile();
+                        oneOpenFile = new OFile();
+                        FileAttribute fa = fe.FindFileByFullPath(currentPath, listView2.SelectedItems[0].Text);
+                        oneOpenFile.beginNum = fa.beginPiece;
+                        oneOpenFile.flag = fa.isReadOnly;
                         Editor editor = new Editor();
                         editor.Show();
                     }

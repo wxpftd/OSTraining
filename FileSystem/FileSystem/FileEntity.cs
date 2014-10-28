@@ -370,6 +370,31 @@ namespace FileSystem
         #endregion
         #endregion
 
+        #region 按链接寻找文件项
+        public FileAttribute FindFileByFullPath(string parentPath, string fileName)
+        {
+            FileAttribute[] fileAttributes = FindByFullPath(parentPath);
+            char[] nameChars = new char[3];
+            foreach (FileAttribute fa in fileAttributes)
+            {
+                nameChars[0] = fa.fileName1;
+                nameChars[1] = fa.fileName2;
+                nameChars[2] = fa.fileName3;
+                string name = new string(nameChars);
+                name = name.Trim();
+                if (name == fileName)
+                {
+                    if (fa.fileOrDirctory == 0)
+                    {
+                        // 弹出文件编辑窗口
+                        return fa;
+                    }
+                }
+            }
+            return FindByFullPath(FileSystem.currentPath)[0];
+        }
+        #endregion
+
         #region 按链接寻找目录项
         private FileAttribute[] FindByFullPath(string fullPath)
         {
@@ -475,7 +500,7 @@ namespace FileSystem
     }
 
     #region 目录项
-    class FileAttribute
+    public class FileAttribute
     {
         public char fileName1 { get; set; } // 文件名(目录名)
         public char fileName2 { get; set; } // 文件名(目录名)

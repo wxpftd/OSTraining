@@ -71,13 +71,13 @@
             // 保存ToolStripMenuItem
             // 
             this.保存ToolStripMenuItem.Name = "保存ToolStripMenuItem";
-            this.保存ToolStripMenuItem.Size = new System.Drawing.Size(108, 24);
+            this.保存ToolStripMenuItem.Size = new System.Drawing.Size(175, 24);
             this.保存ToolStripMenuItem.Text = "保存";
             // 
             // 关闭ToolStripMenuItem
             // 
             this.关闭ToolStripMenuItem.Name = "关闭ToolStripMenuItem";
-            this.关闭ToolStripMenuItem.Size = new System.Drawing.Size(108, 24);
+            this.关闭ToolStripMenuItem.Size = new System.Drawing.Size(175, 24);
             this.关闭ToolStripMenuItem.Text = "关闭";
             // 
             // toolStrip1
@@ -99,6 +99,7 @@
             this.SaveFile.Name = "SaveFile";
             this.SaveFile.Size = new System.Drawing.Size(23, 22);
             this.SaveFile.Text = "toolStripButton1";
+            this.SaveFile.Click += new System.EventHandler(this.SaveFile_Click);
             // 
             // CloseFile
             // 

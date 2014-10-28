@@ -262,6 +262,32 @@ namespace FileSystem
             ft.Show();
         }
 
+        private void DeleteFileButton_Click(object sender, EventArgs e)
+        {
+            if (this.listView2.SelectedItems.Count > 0)
+            {
+                FileAttribute[] fileAttributes = FindByFullPath(currentPath);
+                string name = "";
+                foreach (FileAttribute fa in fileAttributes)
+                {
+                    name += fa.fileName1;
+                    name += fa.fileName2;
+                    name += fa.fileName3;
+                    name = name.Trim();
+                    if (name == listView2.SelectedItems[0].Text)
+                    {
+                        fe.fileTable[fa.beginPiece] = 0;
+                        fe.cache[fa.beginPiece] = new byte[72];
+                        fa.fileName1 = '$';
+                        break;
+                    }
+                }
+                int currentPos = fe.FindDiskPiece(currentPath);
+                fe.AttributesInCache(currentPos, fileAttributes);
+                fe.dataLand();
+            }
+       }
+
     }
 
     class IconIndexes

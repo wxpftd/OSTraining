@@ -167,7 +167,7 @@ namespace FileSystem
         }
 
         #region 返回文件夹内已用目录项的个数
-        private int subFileCount(string parentPath)
+        public int subFileCount(string parentPath)
         {
             FileAttribute[] fileAttributes = FindByFullPath(parentPath);
             int count = 0;
@@ -181,7 +181,7 @@ namespace FileSystem
         #endregion
 
         #region 返回路径所在的磁盘块中
-        private int FindDiskPiece(string fullPath)
+        public int FindDiskPiece(string fullPath)
         {
             if (fullPath == @"/")
             {
@@ -245,7 +245,7 @@ namespace FileSystem
         #endregion
 
         #region 将修改后的目录项数组装进cache
-        private int AttributesInCache(int currentPos, FileAttribute[] fileAttributes)
+        public int AttributesInCache(int currentPos, FileAttribute[] fileAttributes)
         {
             int cacheInnerPos = 0;
             for (int i = 0; i < 8; ++i)

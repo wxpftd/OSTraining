@@ -109,6 +109,7 @@
             this.CloseFile.Name = "CloseFile";
             this.CloseFile.Size = new System.Drawing.Size(23, 22);
             this.CloseFile.Text = "toolStripButton2";
+            this.CloseFile.Click += new System.EventHandler(this.CloseFile_Click);
             // 
             // Editor
             // 

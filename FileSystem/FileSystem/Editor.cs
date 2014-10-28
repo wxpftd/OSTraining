@@ -34,5 +34,10 @@ namespace FileSystem
             }
             FileSystem.fe.dataLand();
         }
+
+        private void CloseFile_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
 }

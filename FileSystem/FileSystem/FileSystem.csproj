@@ -51,11 +51,23 @@
     <Compile Include="CreateDirectory.Designer.cs">
       <DependentUpon>CreateDirectory.cs</DependentUpon>
     </Compile>
+    <Compile Include="CreateDirectoryDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateDirectoryDialog.Designer.cs">
+      <DependentUpon>CreateDirectoryDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="CreateFileDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="CreateFileDialog.Designer.cs">
       <DependentUpon>CreateFileDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editor.Designer.cs">
+      <DependentUpon>Editor.cs</DependentUpon>
     </Compile>
     <Compile Include="FileEntity.cs" />
     <Compile Include="FileSystem.cs">
@@ -64,16 +76,31 @@
     <Compile Include="FileSystem.Designer.cs">
       <DependentUpon>FileSystem.cs</DependentUpon>
     </Compile>
+    <Compile Include="FileTable.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FileTable.Designer.cs">
+      <DependentUpon>FileTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="CreateDirectory.resx">
       <DependentUpon>CreateDirectory.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="CreateDirectoryDialog.resx">
+      <DependentUpon>CreateDirectoryDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CreateFileDialog.resx">
       <DependentUpon>CreateFileDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Editor.resx">
+      <DependentUpon>Editor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FileSystem.resx">
       <DependentUpon>FileSystem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FileTable.resx">
+      <DependentUpon>FileTable.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

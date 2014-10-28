@@ -52,9 +52,9 @@ namespace FileSystem
                     pos = 0;
                 }
                 byte[] testFileAttribute = new FileAttribute('F', 'T', 'D', '\0', '\0', 1, 0, 3, 1).ToByte();
-                for (int i = 9; i < 18; ++i )
+                for (int i = 0; i < 9; ++i )
                 {
-                    cache[2][i] = testFileAttribute[i%9];
+                    cache[2][i] = testFileAttribute[i];
                 }
                 for (int i = 0; i < 72; i += 9)
                 {
@@ -141,6 +141,19 @@ namespace FileSystem
                             {
                                 fileTable[i] = 255;
                                 fa.beginPiece = Convert.ToByte(i);
+                                for (int j = 0; j < 72; j += 9)
+                                {
+                                    FileAttribute oneFileAttribute = new FileAttribute();
+                                    oneFileAttribute.fileName1 = '$';
+                                    int pos = 0;
+                                    foreach (byte attribute in oneFileAttribute.ToByte())
+                                    {
+                                        cache[currentPos][j + pos] = attribute;
+                                        ++pos;
+                                    }
+                                    pos = 0;
+                                }
+                                break;
                             }
                         }
                         break;
@@ -193,12 +206,12 @@ namespace FileSystem
                             nameChars[1] = fa.fileName2;
                             nameChars[2] = fa.fileName3;
                             string name = new string(nameChars);
+                            name = name.Trim();
                             if (name == partName)
                             {
                                 if (fa.fileOrDirctory == 0)
                                 {
-                                    // 弹出文件编辑窗口
-                                    return -1;
+                                    return fa.beginPiece;
                                 }
                                 else
                                 {
@@ -207,27 +220,23 @@ namespace FileSystem
                             }
                         }
                     }
-                    foreach (FileAttribute fa in fileAttributes)
-                    {
-                        char[] nameChars = new char[3];
-
-                        if (fa.fileOrDirctory == 1)
+                    else
+                        foreach (FileAttribute fa in fileAttributes)
                         {
-                            nameChars[0] = fa.fileName1;
-                            nameChars[1] = fa.fileName2;
-                            nameChars[2] = fa.fileName3;
-                            string name = new string(nameChars);
-                            if (name == partName)
+                            char[] nameChars = new char[3];
+
+                            if (fa.fileOrDirctory == 1)
                             {
-                                currentPiece = FileSystem.fe.cache[fa.beginPiece];
+                                nameChars[0] = fa.fileName1;
+                                nameChars[1] = fa.fileName2;
+                                nameChars[2] = fa.fileName3;
+                                string name = new string(nameChars);
+                                if (name == partName)
+                                {
+                                    currentPiece = FileSystem.fe.cache[fa.beginPiece];
+                                }
                             }
                         }
-                        else
-                        {
-                            MessageBox.Show("输入的路径有误。");
-                            return -1;
-                        }
-                    }
                 }
                 // return
             }
@@ -239,9 +248,9 @@ namespace FileSystem
         private int AttributesInCache(int currentPos, FileAttribute[] fileAttributes)
         {
             int cacheInnerPos = 0;
-            for (int i = 0; i < 8; ++i )
+            for (int i = 0; i < 8; ++i)
             {
-                foreach(byte oneByte in fileAttributes[i].ToByte())
+                foreach (byte oneByte in fileAttributes[i].ToByte())
                 {
                     cache[currentPos][cacheInnerPos] = oneByte;
                     cacheInnerPos++;
@@ -305,54 +314,44 @@ namespace FileSystem
 
         #region 目录操作
         #region 建立目录
-        public int md(string dirName)
+        public int md(string parentPath, string dirName)
         {
-            bool isSuccess = false;
-            string fileName = "";
-            string fileExpend = "";
-            int fileProperty = 0;
-            CreateFileDialog createFileDialog = new CreateFileDialog();
-            createFileDialog.Show();
-            if (createFileDialog.messageConfirm == System.Windows.Forms.DialogResult.OK)
+            if (subFileCount(parentPath) < 8)
             {
-                fileName = createFileDialog.fileName;
-                fileExpend = createFileDialog.fileExpend;
-                fileProperty = createFileDialog.fileProperty;
-            }
-
-            if (dirName == "/")
-            {
-                for (int i = 0; i < 64; i += 8)
+                int currentPos = FindDiskPiece(parentPath);
+                FileAttribute[] fileAttributes = FindByFullPath(parentPath);
+                foreach (FileAttribute fa in fileAttributes)
                 {
-                    if (this.currentMem[2][i] == Convert.ToByte('$'))
+                    if (fa.fileName1 == '$')
                     {
-                        isSuccess = true;
-                        int pos = 0;
-                        foreach (byte preNameChar in System.Text.Encoding.Default.GetBytes(fileName))
+                        char[] cffileName = dirName.ToCharArray();
+                        fa.fileName1 = cffileName[0];
+                        fa.fileName2 = cffileName[1];
+                        fa.fileName3 = cffileName[2];
+                        fa.fileOrDirctory = 1;
+                        fa.isReadOnly = 1;
+                        fa.pieceLength = 1;
+                        for (int i = 2; i < 128; ++i)
                         {
-                            currentMem[2][pos++] = preNameChar;
-                        }
-                        foreach (byte preNameChar in System.Text.Encoding.Default.GetBytes(fileExpend))
-                        {
-                            currentMem[2][pos++] = preNameChar;
-                        }
-                        switch (fileProperty)
-                        {
-                            case 0:
-                                currentMem[2][pos++] = 5;
+                            if (fileTable[i] == 0)
+                            {
+                                fileTable[i] = 255;
+                                fa.beginPiece = Convert.ToByte(i);
+                                for (int j = 0; j < 72; j += 9)
+                                {
+                                    cache[i][j] = Convert.ToByte('$');
+                                }
                                 break;
-                            case 1:
-                                currentMem[2][pos++] = 4;
-                                break;
+                            }
                         }
-
-
+                        break;
                     }
                 }
+                AttributesInCache(currentPos, fileAttributes);
+                dataLand();
+                return 0;
             }
-            if (!isSuccess)
-                return -1;
-            return 0;
+            return -1;
         }
         #endregion
 
@@ -371,13 +370,13 @@ namespace FileSystem
         #endregion
         #endregion
 
-        #region 按链接寻找文件
+        #region 按链接寻找目录项
         private FileAttribute[] FindByFullPath(string fullPath)
         {
             if (fullPath == @"/")
             {
                 FileAttribute[] fileAttributes = new FileAttribute[8];
-                PieceToFileAttributes(cache[2], fileAttributes);
+                PieceToFileAttributes(FileSystem.fe.cache[2], fileAttributes);
                 FileSystem.currentPath = fullPath;
                 return fileAttributes;
             }
@@ -400,12 +399,13 @@ namespace FileSystem
                             nameChars[1] = fa.fileName2;
                             nameChars[2] = fa.fileName3;
                             string name = new string(nameChars);
+                            name = name.Trim();
                             if (name == partName)
                             {
                                 if (fa.fileOrDirctory == 0)
                                 {
                                     // 弹出文件编辑窗口
-                                    return null;
+                                    return FindByFullPath(FileSystem.currentPath);
                                 }
                                 else
                                 {
@@ -431,11 +431,6 @@ namespace FileSystem
                             {
                                 currentPiece = FileSystem.fe.cache[fa.beginPiece];
                             }
-                        }
-                        else
-                        {
-                            MessageBox.Show("输入的路径有误。");
-                            return null; 
                         }
                     }
                 }
@@ -469,7 +464,7 @@ namespace FileSystem
         {
             file.Seek(0, SeekOrigin.Begin);
             file.Write(fileTable, 0, 128);
-            for (int i = 2; i < 128; ++i )
+            for (int i = 2; i < 128; ++i)
             {
                 file.Write(cache[i], 0, 72);
             }
@@ -492,7 +487,7 @@ namespace FileSystem
         public byte beginPiece { get; set; } // 起始盘块
         public byte pieceLength { get; set; } // 盘块数目
 
-        public FileAttribute ()
+        public FileAttribute()
         {
 
         }
@@ -509,7 +504,7 @@ namespace FileSystem
             this.pieceLength = pieceLength;
         }
 
-        public byte[] ToByte ()
+        public byte[] ToByte()
         {
             byte[] objectByte = new byte[9];
             objectByte[0] = Convert.ToByte(this.fileName1);
@@ -541,7 +536,7 @@ namespace FileSystem
     #endregion
 
     #region 文件位置
-    class Pointer // 文件位置
+    public class Pointer // 文件位置
     {
         int dnum;
         int bnum;
@@ -549,23 +544,28 @@ namespace FileSystem
     #endregion
 
     #region 打开文件信息
-    class OFile // 打开文件信息
+    public class OFile // 打开文件信息
     {
-        string name; // 文件的绝对路径
-        byte attribute; // 文件属性
-        byte beginNum; // 起始盘块
-        byte length; // 盘块长度
-        byte flag; // 读写控制位
-        Pointer read; // 读文件位置
-        Pointer write; // 写文件位置
+        public string name; // 文件的绝对路径
+        public byte attribute; // 文件属性
+        public byte beginNum; // 起始盘块
+        public byte length; // 盘块长度
+        public byte flag; // 读写控制位
+        public Pointer read; // 读文件位置
+        public Pointer write; // 写文件位置
     }
     #endregion
 
     #region 打开文件登记表
-    class OpenFile // 打开文件登记表
+    public class OpenFile // 打开文件登记表
     {
         OFile[] openFiles;
         int lenght;
+
+        public OpenFile()
+        {
+
+        }
         OpenFile(int MAXFILECOUNT = 10)
         {
             openFiles = new OFile[MAXFILECOUNT];

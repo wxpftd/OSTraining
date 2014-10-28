@@ -15,6 +15,7 @@ namespace FileSystem
     {
         public static FileEntity fe;
         public static string currentPath;
+        public static OFile oneOpenFile;
         public FileSystem()
         {
             currentPath = "/";
@@ -27,11 +28,7 @@ namespace FileSystem
         {
             fe = new FileEntity();
             fe.Init();
-            for (int i = 0; i < 128; i++)
-            {
-                System.Windows.Forms.ListViewItem newListViewItem = new ListViewItem(new string[] { "#" + i, Convert.ToString(fe.fileTable[i]) }, -1);
-                this.listView1.Items.Add(newListViewItem);
-            }
+            
             if (fe.fileTable[0] == Convert.ToByte(254) || fe.fileTable[1] == Convert.ToByte(254) || fe.fileTable[2] == Convert.ToByte(254))
             {
                 // TODO 弹出错误窗口
@@ -65,7 +62,7 @@ namespace FileSystem
             }
         }
 
-        #region 按链接寻找文件
+        #region 按链接寻找目录项
         private FileAttribute[] FindByFullPath(string fullPath)
         {
             if (fullPath == @"/")
@@ -123,6 +120,7 @@ namespace FileSystem
                             nameChars[1] = fa.fileName2;
                             nameChars[2] = fa.fileName3;
                             string name = new string(nameChars);
+                            name = name.Trim();
                             if (name == partName)
                             {
                                 currentPiece = fe.cache[fa.beginPiece];
@@ -193,6 +191,7 @@ namespace FileSystem
                 name += fileAttribute.fileName1;
                 name += fileAttribute.fileName2;
                 name += fileAttribute.fileName3;
+                name = name.Trim();
             }
             lvi.Text = name;
             return lvi;
@@ -209,7 +208,9 @@ namespace FileSystem
 
         private void CreateDirectoryButton_Click(object sender, EventArgs e)
         {
-
+            CreateDirectoryDialog cd = new CreateDirectoryDialog();
+            cd.Show();
+            ViewFlush(currentPath);
         }
 
         private void transfer_Click(object sender, EventArgs e)
@@ -240,9 +241,22 @@ namespace FileSystem
                         ViewFlush(currentPath + listView2.SelectedItems[0].Text);
                 else
                 {
-                    ViewFlush(currentPath + @"/" + listView2.SelectedItems[0].Text);
+                    if (listView2.SelectedItems[0].ImageIndex == 0)
+                        ViewFlush(currentPath + @"/" + listView2.SelectedItems[0].Text);
+                    else
+                    {
+                        OFile ofile = new OFile();
+                        Editor editor = new Editor();
+                        editor.Show();
+                    }
                 }
             }
+        }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            FileTable ft = new FileTable();
+            ft.Show();
         }
 
     }

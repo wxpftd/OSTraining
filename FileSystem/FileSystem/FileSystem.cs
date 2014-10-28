@@ -97,7 +97,7 @@ namespace FileSystem
                                 if (fa.fileOrDirctory == 0)
                                 {
                                     // 弹出文件编辑窗口
-                                    MessageBox.Show("打开" + listView2.SelectedItems[0].Text);
+                                    //MessageBox.Show("打开" + listView2.SelectedItems[0].Text);
                                     return FindByFullPath(currentPath);
                                 }
                                 else
@@ -201,15 +201,15 @@ namespace FileSystem
         private void toolStripButton8_Click(object sender, EventArgs e)
         {
             CreateFileDialog cf = new CreateFileDialog();
-            cf.Show();
-            cf.BeginInvoke(new Action(() => { ViewFlush(currentPath); }));
+            cf.ShowDialog();
+            ViewFlush(currentPath);
         }
         #endregion
 
         private void CreateDirectoryButton_Click(object sender, EventArgs e)
         {
             CreateDirectoryDialog cd = new CreateDirectoryDialog();
-            cd.Show();
+            cd.ShowDialog();
             ViewFlush(currentPath);
         }
 
@@ -238,7 +238,19 @@ namespace FileSystem
             if (listView2.SelectedIndices.Count > 0)
             {
                 if (currentPath == @"/")
+                {
+                    if (listView2.SelectedItems[0].ImageIndex == 0)
                         ViewFlush(currentPath + listView2.SelectedItems[0].Text);
+                    else
+                    {
+                        oneOpenFile = new OFile();
+                        FileAttribute fa = fe.FindFileByFullPath(currentPath, listView2.SelectedItems[0].Text);
+                        oneOpenFile.beginNum = fa.beginPiece;
+                        oneOpenFile.flag = fa.isReadOnly;
+                        Editor editor = new Editor();
+                        editor.Show();
+                    }
+                }
                 else
                 {
                     if (listView2.SelectedItems[0].ImageIndex == 0)
@@ -270,6 +282,7 @@ namespace FileSystem
                 string name = "";
                 foreach (FileAttribute fa in fileAttributes)
                 {
+                    name = "";
                     name += fa.fileName1;
                     name += fa.fileName2;
                     name += fa.fileName3;
@@ -287,6 +300,67 @@ namespace FileSystem
                 fe.dataLand();
             }
        }
+
+        private void ReNameButton_Click(object sender, EventArgs e)
+        {
+            if (this.listView2.SelectedItems.Count > 0)
+            {
+                FileAttribute[] fileAttributes = FindByFullPath(currentPath);
+                string name = "";
+                foreach (FileAttribute fa in fileAttributes)
+                {
+                    name = "";
+                    name += fa.fileName1;
+                    name += fa.fileName2;
+                    name += fa.fileName3;
+                    name = name.Trim();
+                    if (name == listView2.SelectedItems[0].Text)
+                    {
+                        ReName rn = new ReName();
+                        rn.ShowDialog();
+                        if (rn.messageConfirm == System.Windows.Forms.DialogResult.OK)
+                        {
+                            string newNameTemp = rn.newName;
+                            fa.fileName1 = newNameTemp[0];
+                            fa.fileName2 = newNameTemp[1];
+                            fa.fileName3 = newNameTemp[2];
+                        }
+                        break;
+                    }
+                }
+                int currentPos = fe.FindDiskPiece(currentPath);
+                fe.AttributesInCache(currentPos, fileAttributes);
+                fe.dataLand();
+            }
+        }
+
+        private void PropertyButton_Click(object sender, EventArgs e)
+        {
+            if (this.listView2.SelectedItems.Count > 0)
+            {
+                FileAttribute[] fileAttributes = FindByFullPath(currentPath);
+                string name = "";
+                foreach (FileAttribute fa in fileAttributes)
+                {
+                    name = "";
+                    name += fa.fileName1;
+                    name += fa.fileName2;
+                    name += fa.fileName3;
+                    name = name.Trim();
+                    if (name == listView2.SelectedItems[0].Text)
+                    {
+                        AttributesShow attributesShow = new AttributesShow();
+                        attributesShow.Start(this.listView2.SelectedItems[0].Text, fa.beginPiece, fa.isReadOnly);
+                        attributesShow.ShowDialog();
+                        fa.isReadOnly = Convert.ToByte(attributesShow.flag);
+                        break;
+                    }
+                }
+                int currentPos = fe.FindDiskPiece(currentPath);
+                fe.AttributesInCache(currentPos, fileAttributes);
+                fe.dataLand();
+            }
+        }
 
     }
 

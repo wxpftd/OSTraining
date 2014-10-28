@@ -21,6 +21,10 @@ namespace FileSystem
                 buffer[i] = Convert.ToChar(FileSystem.fe.cache[FileSystem.oneOpenFile.beginNum][i]);
             }
             this.Content.Text = new string(buffer);
+            if (FileSystem.oneOpenFile.flag == 0)
+            {
+                this.Content.Enabled = false;
+            }
         }
 
         private void SaveFile_Click(object sender, EventArgs e)

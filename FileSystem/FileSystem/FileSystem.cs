@@ -299,6 +299,7 @@ namespace FileSystem
                 fe.AttributesInCache(currentPos, fileAttributes);
                 fe.dataLand();
             }
+            ViewFlush(currentPath);
        }
 
         private void ReNameButton_Click(object sender, EventArgs e)
@@ -332,6 +333,7 @@ namespace FileSystem
                 fe.AttributesInCache(currentPos, fileAttributes);
                 fe.dataLand();
             }
+            ViewFlush(currentPath);
         }
 
         private void PropertyButton_Click(object sender, EventArgs e)

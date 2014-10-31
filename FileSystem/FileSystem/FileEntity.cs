@@ -151,8 +151,16 @@ namespace FileSystem
                         char[] cffileExpend = fileExpend.ToCharArray();
                         if (cffileExpend.Length > 0 && !String.IsNullOrWhiteSpace(Convert.ToString(cffileExpend[0])))
                         {
-                            fa.fileType1 = cffileExpend[0];
-                            fa.fileType2 = cffileExpend[1];
+                            if (cffileExpend.Length == 2)
+                            {
+                                fa.fileType1 = cffileExpend[0];
+                                fa.fileType2 = cffileExpend[1];
+                            }
+                            else
+                            {
+                                fa.fileType1 = cffileExpend[0];
+                                fa.fileType2 = ' ';
+                            }
                         }
                         else
                         {

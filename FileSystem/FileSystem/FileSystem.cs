@@ -288,10 +288,25 @@ namespace FileSystem
                     name += fa.fileName2;
                     name += fa.fileName3;
                     name = name.Trim();
+                    if (!String.IsNullOrWhiteSpace(Convert.ToString(fa.fileType1)))
+                    {
+                        name += ".";
+                        name += fa.fileType1;
+                        name += fa.fileType2;
+                    }
+                    name = name.Trim();
                     if (name == listView2.SelectedItems[0].Text)
                     {
-                        fe.fileTable[fa.beginPiece] = 0;
-                        fe.cache[fa.beginPiece] = new byte[72];
+                        int startPiece = fa.beginPiece;
+                        int nextPiece;
+                        do
+                        {
+                            nextPiece = fe.fileTable[startPiece];
+                            fe.fileTable[startPiece] = 0;
+                            fe.cache[startPiece] = new byte[72];
+                            startPiece = nextPiece;
+                        }
+                        while (nextPiece != 255);
                         fa.fileName1 = '$';
                         break;
                     }
@@ -415,10 +430,25 @@ namespace FileSystem
                     name += fa.fileName2;
                     name += fa.fileName3;
                     name = name.Trim();
+                    if (!String.IsNullOrWhiteSpace(Convert.ToString(fa.fileType1)))
+                    {
+                        name += ".";
+                        name += fa.fileType1;
+                        name += fa.fileType2;
+                    }
+                    name = name.Trim();
                     if (name == listView2.SelectedItems[0].Text)
                     {
-                        fe.fileTable[fa.beginPiece] = 0;
-                        fe.cache[fa.beginPiece] = new byte[72];
+                        int startPiece = fa.beginPiece;
+                        int nextPiece;
+                        do
+                        {
+                            nextPiece = fe.fileTable[startPiece];
+                            fe.fileTable[startPiece] = 0;
+                            fe.cache[startPiece] = new byte[72];
+                            startPiece = nextPiece;
+                        }
+                        while (nextPiece != 255);
                         fa.fileName1 = '$';
                         break;
                     }

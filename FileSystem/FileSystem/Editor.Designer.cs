@@ -73,12 +73,14 @@
             this.保存ToolStripMenuItem.Name = "保存ToolStripMenuItem";
             this.保存ToolStripMenuItem.Size = new System.Drawing.Size(175, 24);
             this.保存ToolStripMenuItem.Text = "保存";
+            this.保存ToolStripMenuItem.Click += new System.EventHandler(this.保存ToolStripMenuItem_Click);
             // 
             // 关闭ToolStripMenuItem
             // 
             this.关闭ToolStripMenuItem.Name = "关闭ToolStripMenuItem";
             this.关闭ToolStripMenuItem.Size = new System.Drawing.Size(175, 24);
             this.关闭ToolStripMenuItem.Text = "关闭";
+            this.关闭ToolStripMenuItem.Click += new System.EventHandler(this.关闭ToolStripMenuItem_Click);
             // 
             // toolStrip1
             // 

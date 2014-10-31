@@ -43,5 +43,22 @@ namespace FileSystem
         {
             this.Close();
         }
+
+        private void 保存ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            char[] buffer = this.Content.Text.ToCharArray();
+            int pos = 0;
+            foreach (char ch in buffer)
+            {
+                FileSystem.fe.cache[FileSystem.oneOpenFile.beginNum][pos] = Convert.ToByte(ch);
+                ++pos;
+            }
+            FileSystem.fe.dataLand();
+        }
+
+        private void 关闭ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
 }

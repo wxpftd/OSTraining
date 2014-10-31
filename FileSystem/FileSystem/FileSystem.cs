@@ -275,6 +275,10 @@ namespace FileSystem
         {
             if (this.listView2.SelectedItems.Count > 0)
             {
+                if (MessageBox.Show("要删除 "+listView2.SelectedItems[0].Text+" 吗？", "确认删除", MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.Cancel)
+                {
+                    return;
+                }
                 FileAttribute[] fileAttributes = FindByFullPath(currentPath);
                 string name = "";
                 foreach (FileAttribute fa in fileAttributes)
@@ -319,9 +323,28 @@ namespace FileSystem
                         if (rn.messageConfirm == System.Windows.Forms.DialogResult.OK)
                         {
                             string newNameTemp = rn.newName;
-                            fa.fileName1 = newNameTemp[0];
-                            fa.fileName2 = newNameTemp[1];
-                            fa.fileName3 = newNameTemp[2];
+                            if (String.IsNullOrWhiteSpace(newNameTemp))
+                            {
+                                MessageBox.Show("新文件名不能为空.");
+                            }
+                            else if (newNameTemp.Length == 3)
+                            {
+                                fa.fileName1 = newNameTemp[0];
+                                fa.fileName2 = newNameTemp[1];
+                                fa.fileName3 = newNameTemp[2];
+                            }
+                            else if (newNameTemp.Length == 2)
+                            {
+                                fa.fileName1 = newNameTemp[0];
+                                fa.fileName2 = newNameTemp[1];
+                                fa.fileName3 = ' ';
+                            }
+                            else if (newNameTemp.Length == 1)
+                            {
+                                fa.fileName1 = newNameTemp[0];
+                                fa.fileName2 = ' ';
+                                fa.fileName3 = ' ';
+                            }
                         }
                         break;
                     }
@@ -361,6 +384,132 @@ namespace FileSystem
             }
         }
 
+        private void 新建文件ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CreateFileDialog cf = new CreateFileDialog();
+            cf.ShowDialog();
+            ViewFlush(currentPath);
+        }
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            CreateDirectoryDialog cd = new CreateDirectoryDialog();
+            cd.ShowDialog();
+            ViewFlush(currentPath);
+        }
+
+        private void 删除文件ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.listView2.SelectedItems.Count > 0)
+            {
+                if (MessageBox.Show("要删除 " + listView2.SelectedItems[0].Text + " 吗？", "确认删除", MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.Cancel)
+                {
+                    return;
+                }
+                FileAttribute[] fileAttributes = FindByFullPath(currentPath);
+                string name = "";
+                foreach (FileAttribute fa in fileAttributes)
+                {
+                    name = "";
+                    name += fa.fileName1;
+                    name += fa.fileName2;
+                    name += fa.fileName3;
+                    name = name.Trim();
+                    if (name == listView2.SelectedItems[0].Text)
+                    {
+                        fe.fileTable[fa.beginPiece] = 0;
+                        fe.cache[fa.beginPiece] = new byte[72];
+                        fa.fileName1 = '$';
+                        break;
+                    }
+                }
+                int currentPos = fe.FindDiskPiece(currentPath);
+                fe.AttributesInCache(currentPos, fileAttributes);
+                fe.dataLand();
+            }
+            ViewFlush(currentPath);
+        }
+
+        private void 重命名ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.listView2.SelectedItems.Count > 0)
+            {
+                FileAttribute[] fileAttributes = FindByFullPath(currentPath);
+                string name = "";
+                foreach (FileAttribute fa in fileAttributes)
+                {
+                    name = "";
+                    name += fa.fileName1;
+                    name += fa.fileName2;
+                    name += fa.fileName3;
+                    name = name.Trim();
+                    if (name == listView2.SelectedItems[0].Text)
+                    {
+                        ReName rn = new ReName();
+                        rn.ShowDialog();
+                        if (rn.messageConfirm == System.Windows.Forms.DialogResult.OK)
+                        {
+                            string newNameTemp = rn.newName;
+                            if (String.IsNullOrWhiteSpace(newNameTemp))
+                            {
+                                MessageBox.Show("新文件名不能为空.");
+                            }
+                            else if (newNameTemp.Length == 3)
+                            {
+                                fa.fileName1 = newNameTemp[0];
+                                fa.fileName2 = newNameTemp[1];
+                                fa.fileName3 = newNameTemp[2];
+                            }
+                            else if(newNameTemp.Length == 2)
+                            {
+                                fa.fileName1 = newNameTemp[0];
+                                fa.fileName2 = newNameTemp[1];
+                                fa.fileName3 = ' ';
+                            }
+                            else if(newNameTemp.Length == 1)
+                            {
+                                fa.fileName1 = newNameTemp[0];
+                                fa.fileName2 = ' '; 
+                                fa.fileName3 = ' ';
+                            }
+                        }
+                        break;
+                    }
+                }
+                int currentPos = fe.FindDiskPiece(currentPath);
+                fe.AttributesInCache(currentPos, fileAttributes);
+                fe.dataLand();
+            }
+            ViewFlush(currentPath);
+        }
+
+        private void 属性ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.listView2.SelectedItems.Count > 0)
+            {
+                FileAttribute[] fileAttributes = FindByFullPath(currentPath);
+                string name = "";
+                foreach (FileAttribute fa in fileAttributes)
+                {
+                    name = "";
+                    name += fa.fileName1;
+                    name += fa.fileName2;
+                    name += fa.fileName3;
+                    name = name.Trim();
+                    if (name == listView2.SelectedItems[0].Text)
+                    {
+                        AttributesShow attributesShow = new AttributesShow();
+                        attributesShow.Start(this.listView2.SelectedItems[0].Text, fa.beginPiece, fa.isReadOnly);
+                        attributesShow.ShowDialog();
+                        fa.isReadOnly = Convert.ToByte(attributesShow.flag);
+                        break;
+                    }
+                }
+                int currentPos = fe.FindDiskPiece(currentPath);
+                fe.AttributesInCache(currentPos, fileAttributes);
+                fe.dataLand();
+            }
+        }
     }
 
     class IconIndexes

@@ -510,6 +510,11 @@ namespace FileSystem
                 fe.dataLand();
             }
         }
+
+        private void 关于ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("作者：吴秀鹏 李龙 李方圆 曾耀辉 李彩娟 雷仲恒", "关于我们");
+        }
     }
 
     class IconIndexes

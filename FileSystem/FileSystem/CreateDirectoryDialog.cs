@@ -20,7 +20,7 @@ namespace FileSystem
 
         private void Confirm_Click(object sender, EventArgs e)
         {
-            dirName = this.DirectoryName.Text;
+           dirName = this.DirectoryName.Text;
             while (dirName.Length < 3)
                 dirName += " ";
             FileSystem.fe.md(FileSystem.currentPath, dirName);

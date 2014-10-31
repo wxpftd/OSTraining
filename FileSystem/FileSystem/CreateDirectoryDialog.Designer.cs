@@ -80,6 +80,7 @@
             this.Controls.Add(this.DirectoryName);
             this.Controls.Add(this.label1);
             this.Name = "CreateDirectoryDialog";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "CreateDirectoryDialog";
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -39,7 +39,7 @@ namespace FileSystem
         }
         #endregion
 
-        #region 刷新目录树和文件视图
+        #region 刷新文件视图
         private int ViewFlush(string fullPath)
         {
             this.listView2.BeginUpdate();
@@ -173,16 +173,13 @@ namespace FileSystem
                 fileNameTemp += fileAttribute.fileName2;
                 fileNameTemp += fileAttribute.fileName3;
                 name += fileNameTemp.Trim();
-
-                string fileExpendTemp = "";
-                fileExpendTemp += fileAttribute.fileType1;
-                fileExpendTemp += fileAttribute.fileType2;
-                if (!String.IsNullOrWhiteSpace(fileExpendTemp))
+                if (!String.IsNullOrWhiteSpace(Convert.ToString(fileAttribute.fileType1)))
                 {
+                    string fileExpendTemp = "";
                     fileExpendTemp += '.';
                     fileExpendTemp += fileAttribute.fileType1;
                     fileExpendTemp += fileAttribute.fileType2;
-                    name += fileExpendTemp;
+                    name += fileExpendTemp.Trim();
                 }
             }
             else

@@ -123,6 +123,25 @@ namespace FileSystem
                 FileAttribute[] fileAttributes = FindByFullPath(parentPath);
                 foreach (FileAttribute fa in fileAttributes)
                 {
+                    if (fa.fileOrDirctory == 1)
+                        continue;
+                    string tempFileName = "";
+                    tempFileName += fa.fileName1;
+                    tempFileName += fa.fileName2;
+                    tempFileName += fa.fileName3;
+                    tempFileName = tempFileName.Trim();
+                    string tempFileExpend = "";
+                    tempFileExpend += fa.fileType1;
+                    tempFileExpend += fa.fileType2;
+                    tempFileExpend = tempFileExpend.Trim();
+                    if (tempFileName == fileName.Trim() && tempFileExpend == fileExpend.Trim())
+                    {
+                        MessageBox.Show("不能有重复命名。");
+                        return -1;
+                    }
+                }
+                foreach (FileAttribute fa in fileAttributes)
+                {
                     if (fa.fileName1 == '$')
                     {
                         char[] cffileName = fileName.ToCharArray();
@@ -130,8 +149,16 @@ namespace FileSystem
                         fa.fileName2 = cffileName[1];
                         fa.fileName3 = cffileName[2];
                         char[] cffileExpend = fileExpend.ToCharArray();
-                        fa.fileType1 = cffileExpend[0];
-                        fa.fileType2 = cffileExpend[1];
+                        if (cffileExpend.Length > 0 && !String.IsNullOrWhiteSpace(Convert.ToString(cffileExpend[0])))
+                        {
+                            fa.fileType1 = cffileExpend[0];
+                            fa.fileType2 = cffileExpend[1];
+                        }
+                        else
+                        {
+                            fa.fileType1 = ' ';
+                            fa.fileType2 = ' ';
+                        }
                         fa.fileOrDirctory = 0;
                         fa.isReadOnly = Convert.ToByte(fileProperty);
                         fa.pieceLength = 1;
@@ -322,6 +349,21 @@ namespace FileSystem
                 FileAttribute[] fileAttributes = FindByFullPath(parentPath);
                 foreach (FileAttribute fa in fileAttributes)
                 {
+                    if (fa.fileOrDirctory == 0)
+                        continue;
+                    string tempFileName = "";
+                    tempFileName += fa.fileName1;
+                    tempFileName += fa.fileName2;
+                    tempFileName += fa.fileName3;
+                    tempFileName = tempFileName.Trim();
+                    if (tempFileName == dirName)
+                    {
+                        MessageBox.Show("不能有重复命名。");
+                        return -1;
+                    }
+                }
+                foreach (FileAttribute fa in fileAttributes)
+                {
                     if (fa.fileName1 == '$')
                     {
                         char[] cffileName = dirName.ToCharArray();
@@ -374,24 +416,35 @@ namespace FileSystem
         public FileAttribute FindFileByFullPath(string parentPath, string fileName)
         {
             FileAttribute[] fileAttributes = FindByFullPath(parentPath);
-            char[] nameChars = new char[3];
             foreach (FileAttribute fa in fileAttributes)
             {
-                nameChars[0] = fa.fileName1;
-                nameChars[1] = fa.fileName2;
-                nameChars[2] = fa.fileName3;
-                string name = new string(nameChars);
-                name = name.Trim();
-                if (name == fileName)
+                char[] nameChars = new char[6];
+                if (fa.fileOrDirctory == 0)
                 {
-                    if (fa.fileOrDirctory == 0)
+                    nameChars[0] = fa.fileName1;
+                    nameChars[1] = fa.fileName2;
+                    nameChars[2] = fa.fileName3;
+                    if (!String.IsNullOrWhiteSpace(Convert.ToString(fa.fileType1)))
                     {
-                        // 弹出文件编辑窗口
+                        nameChars[3] = '.';
+                        nameChars[4] = fa.fileType1;
+                        nameChars[5] = fa.fileType2;
+                    }
+                    else
+                    {
+                        nameChars[3] = ' ';
+                        nameChars[4] = ' ';
+                        nameChars[5] = ' ';
+                    }
+                    string name = new string(nameChars);
+                    name = name.Trim();
+                    if (name == fileName)
+                    {
                         return fa;
                     }
                 }
             }
-            return FindByFullPath(FileSystem.currentPath)[0];
+            return null;
         }
         #endregion
 

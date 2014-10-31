@@ -143,18 +143,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup />
-  <ItemGroup>
-    <Content Include="Material\addDirectory.ico" />
-    <Content Include="Material\addFile.ico" />
-    <Content Include="Material\closeFile.ico" />
-    <Content Include="Material\deleteDirectory.ico" />
-    <Content Include="Material\deleteFile.ico" />
-    <Content Include="Material\file.ico" />
-    <Content Include="Material\openDirectory.ico" />
-    <Content Include="Material\reName.ico" />
-    <Content Include="Material\saveFile.ico" />
-    <Content Include="Material\setting.ico" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
